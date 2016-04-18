@@ -154,4 +154,7 @@
  */
 - (UIColor *)simpleCalendarViewController:(PDTSimpleCalendarViewController *)controller textColorForDate:(NSDate *)date;
 
+- (UIColor *)simpleCalendarViewController:(PDTSimpleCalendarViewController *)controller dotColorForDate:(NSDate *)date;
+
+
 @end;

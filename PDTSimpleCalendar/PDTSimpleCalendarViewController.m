@@ -280,7 +280,10 @@ static const NSCalendarUnit kCalendarUnitYMD = NSCalendarUnitYear | NSCalendarUn
 
     //Configure the Overlay View
     [self.overlayView setBackgroundColor:[self.backgroundColor colorWithAlphaComponent:0.90]];
-    [self.overlayView setFont:[UIFont boldSystemFontOfSize:PDTSimpleCalendarOverlaySize]];
+    
+    // TODO: Caroline changed these since they aren't editable.
+    [self.overlayView setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:13]];
+//    [self.overlayView setFont:[UIFont boldSystemFontOfSize:PDTSimpleCalendarOverlaySize]];
     [self.overlayView setTextColor:self.overlayTextColor];
     [self.overlayView setAlpha:0.0];
     [self.overlayView setTextAlignment:NSTextAlignmentCenter];
@@ -381,7 +384,6 @@ static const NSCalendarUnit kCalendarUnitYMD = NSCalendarUnitYear | NSCalendarUn
         if ([self.delegate respondsToSelector:@selector(simpleCalendarViewController:shouldUseCustomColorsForDate:)]) {
             isCustomDate = [self.delegate simpleCalendarViewController:self shouldUseCustomColorsForDate:cellDate];
         }
-
 
     } else {
         [cell setDate:nil calendar:nil];
@@ -622,6 +624,19 @@ static const NSInteger kFirstDay = 1;
         return [self.delegate simpleCalendarViewController:self circleColorForDate:date];
     }
 
+    return nil;
+}
+
+- (UIColor *)simpleCalendarViewCell:(PDTSimpleCalendarViewCell *)cell dotColorForDate:(NSDate *)date
+{
+    if (![self isEnabledDate:date]) {
+        return cell.dotDefaultColor;
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(simpleCalendarViewController:dotColorForDate:)]) {
+        return [self.delegate simpleCalendarViewController:self dotColorForDate:date];
+    }
+    
     return nil;
 }
 

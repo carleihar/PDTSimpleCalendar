@@ -47,6 +47,9 @@
  */
 - (UIColor *)simpleCalendarViewCell:(PDTSimpleCalendarViewCell *)cell circleColorForDate:(NSDate *)date;
 
+- (UIColor *)simpleCalendarViewCell:(PDTSimpleCalendarViewCell *)cell dotColorForDate:(NSDate *)date;
+
+
 @end
 
 /**
@@ -71,6 +74,8 @@
  *  Customize the circle behind the day's number color using UIAppearance.
  */
 @property (nonatomic, strong) UIColor *circleDefaultColor UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, strong) UIColor *dotDefaultColor UI_APPEARANCE_SELECTOR;
 
 /**
  *  Customize the color of the circle for today's cell using UIAppearance.

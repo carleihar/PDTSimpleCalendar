@@ -9,11 +9,13 @@
 #import "PDTSimpleCalendarViewCell.h"
 
 const CGFloat PDTSimpleCalendarCircleSize = 32.0f;
+const CGFloat PDTSimpleCalendarDotSize = 7.0f;
 
 @interface PDTSimpleCalendarViewCell ()
 
 @property (nonatomic, strong) UILabel *dayLabel;
 @property (nonatomic, strong) NSDate *date;
+@property (nonatomic, strong) UIView *dotView;
 
 @end
 
@@ -77,6 +79,13 @@ const CGFloat PDTSimpleCalendarCircleSize = 32.0f;
         [self.dayLabel setTextAlignment:NSTextAlignmentCenter];
         [self.contentView addSubview:self.dayLabel];
 
+        self.dotView = [[UIView alloc] init];
+        [self.dotView setTranslatesAutoresizingMaskIntoConstraints:NO];
+        self.dotView.backgroundColor = [UIColor clearColor];
+        self.dotView.layer.cornerRadius = PDTSimpleCalendarDotSize/2;
+        self.dotView.layer.masksToBounds = YES;
+        [self.contentView addSubview:self.dotView];
+        
         //Add the Constraints
         [self.dayLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self.dayLabel setBackgroundColor:[UIColor clearColor]];
@@ -88,6 +97,18 @@ const CGFloat PDTSimpleCalendarCircleSize = 32.0f;
         [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dayLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:PDTSimpleCalendarCircleSize]];
         [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dayLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:PDTSimpleCalendarCircleSize]];
 
+            [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dotView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0]];
+        
+            [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dotView
+                                                                         attribute:NSLayoutAttributeBottom
+                                                                         relatedBy:NSLayoutRelationEqual
+                                                                            toItem:self.contentView
+                                                                         attribute:NSLayoutAttributeBottom
+                                                                        multiplier:1.0
+                                                                          constant:2]];
+            [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dotView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:PDTSimpleCalendarDotSize]];
+            [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dotView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:PDTSimpleCalendarDotSize]];
+        
         [self setCircleColor:NO selected:NO];
     }
 
@@ -124,6 +145,7 @@ const CGFloat PDTSimpleCalendarCircleSize = 32.0f;
 {
     UIColor *circleColor = (today) ? [self circleTodayColor] : [self circleDefaultColor];
     UIColor *labelColor = (today) ? [self textTodayColor] : [self textDefaultColor];
+    UIColor *dotColor = [UIColor clearColor];
 
     if (self.date && self.delegate) {
         if ([self.delegate respondsToSelector:@selector(simpleCalendarViewCell:shouldUseCustomColorsForDate:)] && [self.delegate simpleCalendarViewCell:self shouldUseCustomColorsForDate:self.date]) {
@@ -135,6 +157,10 @@ const CGFloat PDTSimpleCalendarCircleSize = 32.0f;
             if ([self.delegate respondsToSelector:@selector(simpleCalendarViewCell:circleColorForDate:)] && [self.delegate simpleCalendarViewCell:self circleColorForDate:self.date]) {
                 circleColor = [self.delegate simpleCalendarViewCell:self circleColorForDate:self.date];
             }
+            
+            if ([self.delegate respondsToSelector:@selector(simpleCalendarViewCell:dotColorForDate:)] && [self.delegate simpleCalendarViewCell:self dotColorForDate:self.date]) {
+                dotColor = [self.delegate simpleCalendarViewCell:self dotColorForDate:self.date];
+            }
         }
     }
     
@@ -145,8 +171,8 @@ const CGFloat PDTSimpleCalendarCircleSize = 32.0f;
 
     [self.dayLabel setBackgroundColor:circleColor];
     [self.dayLabel setTextColor:labelColor];
+    [self.dotView setBackgroundColor:dotColor];
 }
-
 
 - (void)refreshCellColors
 {
@@ -179,6 +205,19 @@ const CGFloat PDTSimpleCalendarCircleSize = 32.0f;
     }
 
     return [UIColor whiteColor];
+}
+
+- (UIColor *)dotDefaultColor
+{
+    if(_dotDefaultColor == nil) {
+        _dotDefaultColor = [[[self class] appearance] dotDefaultColor];
+    }
+    
+    if(_dotDefaultColor != nil) {
+        return _dotDefaultColor;
+    }
+    
+    return [UIColor clearColor];
 }
 
 - (UIColor *)circleTodayColor
