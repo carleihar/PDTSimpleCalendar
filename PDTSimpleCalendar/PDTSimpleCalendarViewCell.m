@@ -190,6 +190,7 @@ const CGFloat PDTSimpleCalendarDotSize = 7.0f;
     [self.dayLabel setText:@""];
     [self.dayLabel setBackgroundColor:[self circleDefaultColor]];
     [self.dayLabel setTextColor:[self textDefaultColor]];
+    self.dotView.backgroundColor = [UIColor clearColor];
 }
 
 #pragma mark - Circle Color Customization Methods
